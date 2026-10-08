@@ -16,5 +16,15 @@ public interface DaoInter {
      */
     List<Producto> readFile(String fileXml) throws JAXBException;
 
+   /**
+     * Guarda el resumen en un  fichero de texto
+     * @param path ruta donde se guardará el fichero
+     * @param fecha es elmes y año que aparecerá en el nombre del fichero
+     * @param summary es resumen que se va a guardar
+     */
+    void exportSummary(String path, String fecha, SummaryEntity summary) throws IOException;
+
+
+
 
 }
