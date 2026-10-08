@@ -7,8 +7,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.educa.dao.Dao;
 import org.educa.dao.DaoInter;
 import org.educa.entity.ProductoEntity;
+import org.educa.entity.SummaryEntity;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +61,46 @@ public class ProductoService {
     }
     
 
+    /**
+     * Sirve para guardar el resumen en un fichero de texto
+     * @param path donde se guarda el fichero
+     * @param fileXml ruta del fichero xml
+     * @throws JAXBException si pasa algun errror al leer
+     */
     public void exportSummary(String path, String fileXml) throws JAXBException, IOException {
-        //TODO: Implementar
+         DaoInter dao = new Dao();
+        List<ProductoEntity> listaProductos = readFile(fileXml);
+        int numeroProductos = listaProductos.size();
+
+
+        //Inicializo el benificio total a 0
+        BigDecimal beneficioTotal = BigDecimal.ZERO;
+
+        //Sumo los beneficios
+        for (ProductoEntity producto : listaProductos) {
+            beneficioTotal = beneficioTotal.add(producto.getProfit());
+        }
+
+        File ficheroXML = new File(fileXml);
+
+        String nombreFichero = ficheroXML.getName();
+
+        //Saco el nombre sin la extencion
+        String nombreSinExtension = nombreFichero.substring(0, nombreFichero.lastIndexOf("."));
+
+        //Saco el mes y año del fichero
+        String fecha = nombreSinExtension.substring(nombreSinExtension.indexOf("_") + 1);
+
+        String rutaAbsoluta = ficheroXML.getAbsolutePath();
+
+
+        //Obtengo el tamaño del fichero en bytes
+        long tamanioFichero = ficheroXML.length();
+
+        //Creamos el resumen
+        SummaryEntity summary = new SummaryEntity(fecha, numeroProductos, beneficioTotal, rutaAbsoluta, nombreSinExtension, tamanioFichero);
+
+        dao.exportSummary(path, fecha, summary);
 
     }
 
