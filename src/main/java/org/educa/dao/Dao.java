@@ -28,6 +28,34 @@ public class Dao implements DaoInter{
         return productos.getProducto();
 
 
-  
+        /**
+     * Sirve paara escribir y crear el resumen en el fichero de texto
+     * @param path ruta donde se guardará el fichero
+     * @param fecha es elmes y año que aparecerá en el nombre del fichero
+     * @param summary es resumen que se va a guardar
+     * @throws IOException sí ocurre un error al crear o escribir el fichero
+     */
+    @Override
+    public void exportSummary(String path, String fecha, SummaryEntity summary) throws IOException {
 
+        File carpeta = new File(path);
+
+        if (!carpeta.exists()) {
+            carpeta.mkdirs();
+        }
+
+        File ficheroTXT = new File(
+                carpeta,
+                "result_" + fecha + ".txt"
+        );
+
+        BufferedWriter writer = new BufferedWriter(
+                new FileWriter(ficheroTXT)
+        );
+
+        writer.write(summary.toPrint());
+
+        writer.close();
+
+}
 }
