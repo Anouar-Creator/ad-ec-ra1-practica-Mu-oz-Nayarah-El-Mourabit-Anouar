@@ -13,6 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductoService {
+    /**
+     *Lee los productos del fichero XML y crea una lista de ProductoEntity
+     * @param fileXml La ruta al fichero XML
+     * @return Devueleve los productos
+     * @throws JAXBException Excepcion procesando el fichero XML
+     */
 
     public List<ProductoEntity> readFile(String fileXml) throws JAXBException {
          // Queremos acceder al DAO para poder obtener los productos del XML
