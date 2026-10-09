@@ -27,7 +27,7 @@ public class Dao implements DaoInter{
 
         return productos.getProducto();
 
-
+    }
         /**
      * Sirve paara escribir y crear el resumen en el fichero de texto
      * @param path ruta donde se guardará el fichero
@@ -57,5 +57,35 @@ public class Dao implements DaoInter{
 
         writer.close();
 
-}
+        
+    }
+
+        /**
+     * Guarda el contenido en un fichero de Excel
+     * @param workbook es el Excel que contiene los datos
+     * @param path ruta donde se guardará el fichero Excel
+     * @param fileXml ruta del fichero XML
+     * @throws IOException si ocurre un error al guardar el fichero Excel
+     */
+    @Override
+    public void exportExcel(Workbook workbook, String path, String fileXml)
+            throws IOException {
+        File ficheroXml = new File(fileXml);
+
+        String nombreXml = ficheroXml.getName();
+
+        nombreXml = nombreXml.replace("inventario_", "");
+        nombreXml = nombreXml.replace(".xml", "");
+
+        String nombreExcel = "export_" + nombreXml + ".xlsx";
+
+        File ficheroExcel = new File(path, nombreExcel);
+
+        FileOutputStream salida = new FileOutputStream(ficheroExcel);
+
+        workbook.write(salida);
+
+        salida.close();
+
+        }
 }

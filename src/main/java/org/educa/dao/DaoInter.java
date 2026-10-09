@@ -24,7 +24,15 @@ public interface DaoInter {
      */
     void exportSummary(String path, String fecha, SummaryEntity summary) throws IOException;
 
-
+ /**
+     * Guarda el contenido en un fichero de Excel
+     * @param workbook es el Excel que contiene los datos
+     * @param path ruta donde se guardará el fichero Excel
+     * @param fileXml ruta del fichero XML
+     * @throws IOException si ocurre un error al guardar el fichero Excel
+     */
+    void exportExcel(Workbook workbook, String path, String fileXml)
+            throws IOException;
 
 
 }
