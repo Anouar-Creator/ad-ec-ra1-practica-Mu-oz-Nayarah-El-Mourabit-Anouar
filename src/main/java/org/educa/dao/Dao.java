@@ -38,20 +38,11 @@ public class Dao implements DaoInter{
     @Override
     public void exportSummary(String path, String fecha, SummaryEntity summary) throws IOException {
 
-        File carpeta = new File(path);
+         File carpeta = new File(path);
 
-        if (!carpeta.exists()) {
-            carpeta.mkdirs();
-        }
+        File ficheroTXT = new File(carpeta, "result_" + fecha + ".txt");
 
-        File ficheroTXT = new File(
-                carpeta,
-                "result_" + fecha + ".txt"
-        );
-
-        BufferedWriter writer = new BufferedWriter(
-                new FileWriter(ficheroTXT)
-        );
+        BufferedWriter writer = new BufferedWriter(new FileWriter(ficheroTXT));
 
         writer.write(summary.toPrint());
 
