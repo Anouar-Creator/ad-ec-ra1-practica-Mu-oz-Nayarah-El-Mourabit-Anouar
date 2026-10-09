@@ -186,8 +186,72 @@ public class ProductoService {
             celda.setCellStyle(estiloCabecera);
         }
 
+        // Metemos los datos para rellenar cada celda correspondiente
+        int numeroFila = 1;
+
+        for (ProductoEntity productoEntity : lista) {
+            Producto producto = productoEntity.getProducto();
+            Row fila = hoja.createRow(numeroFila);
+            boolean filaVerde = numeroFila % 2 == 1;
+
+            CellStyle estiloTexto = filaVerde ? colorVerde : colorBlanco;
+            CellStyle estiloCodigo = filaVerde ? codigoVerde : codigoBlanco;
+            CellStyle estiloDinero = filaVerde ? dineroVerde : dineroBlanco;
+            CellStyle estiloPorcentaje = filaVerde ? porcentajeVerde : porcentajeBlanco;
+
+            // Codigo
+            Cell codigo = fila.createCell(0);
+            codigo.setCellValue(producto.getCodigo());
+            codigo.setCellStyle(estiloCodigo);
+
+            // Numero de serie
+            Cell numeroSerie = fila.createCell(1);
+            numeroSerie.setCellValue(producto.getNumeroSerie());
+            numeroSerie.setCellStyle(estiloTexto);
+
+            // Precio
+            Cell precio = fila.createCell(2);
+            precio.setCellValue(producto.getPrecio().doubleValue());
+            precio.setCellStyle(estiloDinero);
+
+            // Descuento
+            Cell descuento = fila.createCell(3);
+            descuento.setCellValue(producto.getDescuento().doubleValue() / 100);
+            descuento.setCellStyle(estiloPorcentaje);
+
+            // Precio final
+            Cell precioFinal = fila.createCell(4);
+            precioFinal.setCellValue(productoEntity.getPrecioFinal().doubleValue());
+            precioFinal.setCellStyle(estiloDinero);
+
+            // Costes envío
+            Cell costeEnvio = fila.createCell(5);
+            costeEnvio.setCellValue(producto.getCostes().getCostesEnvio().doubleValue());
+            costeEnvio.setCellStyle(estiloDinero);
+
+            // Costes almacenaje
+            Cell costeAlmacenaje = fila.createCell(6);
+            costeAlmacenaje.setCellValue(producto.getCostes().getCostesAlmacenaje().doubleValue());
+            costeAlmacenaje.setCellStyle(estiloDinero);
+
+            // Beneficio
+            Cell beneficio = fila.createCell(7);
+            beneficio.setCellValue(productoEntity.getProfit().doubleValue());
+            beneficio.setCellStyle(estiloDinero);
+
+            numeroFila++;
+        }
 
 
-        
+        // Tamaño de las columnas
+        int[] anchosColumnas = {18, 23, 15, 15, 15, 15, 20, 15};
+        for (int i = 0; i < anchosColumnas.length; i++) {
+            hoja.setColumnWidth(i, anchosColumnas[i] * 256);
+        }
+
+        filaCabecera.setHeightInPoints(35);
+
+        dao.exportExcel(workbook, path, fileXml);
+        workbook.close();   
     }
 }
