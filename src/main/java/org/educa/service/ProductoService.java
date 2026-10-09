@@ -105,6 +105,89 @@ public class ProductoService {
     }
 
     public void exportExcel(String path, String fileXml) throws JAXBException, IOException, ParseException {
-        //TODO: Implementar
+        DaoInter dao = new Dao();
+        List<ProductoEntity> lista = readFile(fileXml);
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet hoja = workbook.createSheet("Productos");
+
+        // Ponemos los formatos del dinero y los porcentajes
+        short formatoDinero = workbook.createDataFormat().getFormat("#,##0.00 €");
+        short formatoPorcentaje = workbook.createDataFormat().getFormat("0.00%");
+
+        // Ponemos estilos de cabecera
+        CellStyle estiloCabecera = workbook.createCellStyle();
+        Font fuenteCabecera = workbook.createFont();
+        fuenteCabecera.setBold(true);
+        estiloCabecera.setFont(fuenteCabecera);
+        estiloCabecera.setAlignment(HorizontalAlignment.CENTER);
+        estiloCabecera.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        estiloCabecera.setBorderTop(BorderStyle.THIN);
+        estiloCabecera.setBorderBottom(BorderStyle.THIN);
+        estiloCabecera.setBorderLeft(BorderStyle.THIN);
+        estiloCabecera.setBorderRight(BorderStyle.THIN);
+
+        estiloCabecera.setTopBorderColor(IndexedColors.GREEN.getIndex());
+        estiloCabecera.setBottomBorderColor(IndexedColors.GREEN.getIndex());
+        estiloCabecera.setLeftBorderColor(IndexedColors.GREEN.getIndex());
+        estiloCabecera.setRightBorderColor(IndexedColors.GREEN.getIndex());
+
+
+        // Elegimos colores (en este caso decidimos dejar el verde y blanco del ejemplo)
+        CellStyle colorVerde = workbook.createCellStyle();
+        colorVerde.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+        colorVerde.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        colorVerde.setAlignment(HorizontalAlignment.CENTER);
+        colorVerde.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        CellStyle colorBlanco = workbook.createCellStyle();
+        colorBlanco.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        colorBlanco.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        colorBlanco.setAlignment(HorizontalAlignment.CENTER);
+        colorBlanco.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        // Ponemos los bordes verdes a los estilos
+        for (CellStyle estilo : new CellStyle[]{colorVerde, colorBlanco}) {
+            estilo.setBorderTop(BorderStyle.THIN);
+            estilo.setBorderBottom(BorderStyle.THIN);
+            estilo.setBorderLeft(BorderStyle.THIN);
+            estilo.setBorderRight(BorderStyle.THIN);
+
+            estilo.setTopBorderColor(IndexedColors.GREEN.getIndex());
+            estilo.setBottomBorderColor(IndexedColors.GREEN.getIndex());
+            estilo.setLeftBorderColor(IndexedColors.GREEN.getIndex());
+            estilo.setRightBorderColor(IndexedColors.GREEN.getIndex());
+        }
+
+
+        // Estilos de código, dinero y porcentaje
+        Font fuenteNegrita = workbook.createFont();
+        fuenteNegrita.setBold(true);
+
+        CellStyle codigoVerde = workbook.createCellStyle(); codigoVerde.cloneStyleFrom(colorVerde); codigoVerde.setFont(fuenteNegrita);
+        CellStyle codigoBlanco = workbook.createCellStyle(); codigoBlanco.cloneStyleFrom(colorBlanco); codigoBlanco.setFont(fuenteNegrita);
+
+        CellStyle dineroVerde = workbook.createCellStyle(); dineroVerde.cloneStyleFrom(colorVerde); dineroVerde.setDataFormat(formatoDinero);
+        CellStyle dineroBlanco = workbook.createCellStyle(); dineroBlanco.cloneStyleFrom(colorBlanco); dineroBlanco.setDataFormat(formatoDinero);
+
+        CellStyle porcentajeVerde = workbook.createCellStyle(); porcentajeVerde.cloneStyleFrom(colorVerde); porcentajeVerde.setDataFormat(formatoPorcentaje);
+        CellStyle porcentajeBlanco = workbook.createCellStyle(); porcentajeBlanco.cloneStyleFrom(colorBlanco); porcentajeBlanco.setDataFormat(formatoPorcentaje);
+
+        // Titulos de cada fila
+        Row filaCabecera = hoja.createRow(0);
+        String[] cabeceras = {
+                "Codigo", "Número de Serie", "Precio", "Descuento", "Precio Final", "Costes Envío", "Costes Almacenaje", "Beneficio"
+        };
+
+        for (int i = 0; i < cabeceras.length; i++) {
+            Cell celda = filaCabecera.createCell(i);
+            celda.setCellValue(cabeceras[i]);
+            celda.setCellStyle(estiloCabecera);
+        }
+
+
+
+        
     }
 }
